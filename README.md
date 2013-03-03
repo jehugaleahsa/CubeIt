@@ -28,12 +28,12 @@ When looping through your data, you build up your cube one piece at a time. Here
     Cube<decimal> result = Cube<decimal>.Define(month, week, dayOfWeek);
     foreach (Sale sale in getYearlySales())
     {
-        int month = sale.Date.Month;
-        TimeSpan timeSinceTheFirst = sale.Date - new DateTime(sale.Date.Year, sale.Date.Month, 01);
+        int salesMonth = sale.Date.Month;
+        TimeSpan timeSinceTheFirst = sale.Date - new DateTime(sale.Date.Year, salesMonth, 01);
         int week = Math.Min(4, timeSinceTheFirst.Days / 7) + 1;
         DayOfWeek dow = sale.Date.DayOfWeek;
         Key key = new Key(
-            new KeyPart(month, month),
+            new KeyPart(month, salesMonth),
             new KeyPart(week, week),
             new KeyPart(dayOfWeek, dow));
         Cube<decimal> cube = Cube<decimal>.Singleton(key, sale.Amount);
