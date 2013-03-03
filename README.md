@@ -30,7 +30,7 @@ When looping through your data, you build up your cube one piece at a time. Here
     {
         int month = sale.Date.Month;
         TimeSpan timeSinceTheFirst = sale.Date - new DateTime(sale.Date.Year, sale.Date.Month, 01);
-        int week = Math.Min(4, timeSinceTheFirst.Days / 7);
+        int week = Math.Min(4, timeSinceTheFirst.Days / 7) + 1;
         DayOfWeek dow = sale.Date.DayOfWeek;
         Key key = new Key(
             new KeyPart(month, month),
@@ -59,7 +59,7 @@ It is possible to improve the performance of the code above. It is significantly
     {
         int salesMonth = sale.Date.Month;
         int daysSinceFirst = (sale.Date - new DateTime(sale.Date.Year, salesMonth, 01)).Days;
-        int week = Math.Min(4, daysSinceFirst / 7);
+        int week = Math.Min(4, daysSinceFirst / 7) + 1;
         DayOfWeek dow = sale.Date.DayOfWeek;
         Key key = new Key(
             new KeyPart(month, salesMonth),
