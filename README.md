@@ -89,15 +89,11 @@ At this point, our cube has a single dimension, "Month". We can ask for each mon
 
     var months = monthlySales.GetUniqueKeyParts(month).Select(part => (int)part.Value);
     
-From here, we can create the singleton keys for each month:
+From here, we can create the singleton keys for each month and grab the value for each:
 
-    var keys = months.Select(salesMonth => new Key(new KeyPart(month, salesMonth)));
-    
-Once we have our keys, we can grab the value for each:
-
-    foreach (Key key in keys)
+    foreach (int salesMonth in months)
     {
-        int salesMonth = (int)key.GetKeyPart(month).Value;
+        Key key = new Key(new KeyPart(month, salesMonth));
         decimal totalSales = monthlySales[key];
         Console.Out.WriteLine("{0}: {1:C}", salesMonth, totalSales);
     }
