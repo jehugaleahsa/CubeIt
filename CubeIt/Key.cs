@@ -9,7 +9,7 @@ namespace CubeIt
     /// </summary>
     public sealed class Key : IEquatable<Key>
     {
-        private int? hashCode;
+        private Lazy<int> hashCode;
         private readonly Dictionary<Dimension, KeyPart> keyParts;
 
         /// <summary>
@@ -34,11 +34,13 @@ namespace CubeIt
             {
                 throw new ArgumentException("One or more of the key parts were null.", "parts");
             }
+            this.hashCode = new Lazy<int>(getHashCode);
             this.keyParts = parts.ToDictionary(part => part.Dimension);
         }
 
         internal Key(IEnumerable<KeyPart> keyParts, bool ignore)
         {
+            this.hashCode = new Lazy<int>(getHashCode);
             this.keyParts = keyParts.ToDictionary(part => part.Dimension);
         }
 
@@ -113,19 +115,27 @@ namespace CubeIt
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
         {
-            return hashCode ?? getHashCode();
+            return hashCode.Value;
         }
 
         private int getHashCode()
         {
-            int newHashCode = 0;
-            foreach (KeyPart keyPart in keyParts.Values)
+            using (var enumerator = keyParts.Values.GetEnumerator())
             {
-                newHashCode ^= keyPart.GetHashCode();
+                if (!enumerator.MoveNext())
+                {
+                    return 0;
+                }
+                unchecked
+                {
+                    int hashCode = enumerator.Current.GetHashCode();
+                    while (enumerator.MoveNext())
+                    {
+                        hashCode = ((hashCode << 5) + hashCode) + enumerator.Current.GetHashCode();
+                    }
+                    return hashCode;
+                }
             }
-            // cache the hash code
-            hashCode = newHashCode;
-            return newHashCode;
         }
     }
 }

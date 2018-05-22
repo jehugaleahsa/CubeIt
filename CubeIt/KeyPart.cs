@@ -7,9 +7,6 @@ namespace CubeIt
     /// </summary>
     public sealed class KeyPart : IEquatable<KeyPart>
     {
-        private readonly Dimension dimension;
-        private readonly object value;
-
         /// <summary>
         /// Initializes a new instance of a KeyPart.
         /// </summary>
@@ -17,39 +14,19 @@ namespace CubeIt
         /// <param name="value">The dimension value.</param>
         public KeyPart(Dimension dimension, object value)
         {
-            if (dimension == null)
-            {
-                throw new ArgumentNullException("dimension");
-            }
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-            this.dimension = dimension;
-            this.value = value;
+            Dimension = dimension ?? throw new ArgumentNullException("dimension");
+            Value = value ?? throw new ArgumentNullException("value");
         }
 
         /// <summary>
         /// Gets the dimension.
         /// </summary>
-        public Dimension Dimension
-        {
-            get
-            {
-                return dimension;
-            }
-        }
+        public Dimension Dimension { get; private set; }
 
         /// <summary>
         /// Gets the dimension value.
         /// </summary>
-        public object Value
-        {
-            get
-            {
-                return value;
-            }
-        }
+        public object Value { get; private set; }
 
         /// <summary>
         /// Gets whether two key parts are the same.
@@ -68,7 +45,7 @@ namespace CubeIt
         /// <returns>True if obj is a key part and it represent the same key part; otherwise, false.</returns>
         public bool Equals(KeyPart other)
         {
-            return other != null && dimension == other.dimension && dimension.Equals(value, other.value);
+            return other != null && Dimension == other.Dimension && Dimension.Equals(Value, other.Value);
         }
 
         /// <summary>
@@ -77,7 +54,7 @@ namespace CubeIt
         /// <returns>The hash code.</returns>
         public override int GetHashCode()
         {
-            return dimension.GetHashCode() ^ dimension.GetHashCode(value);
+            return Dimension.GetHashCode() ^ Dimension.GetHashCode(Value);
         }
     }
 }

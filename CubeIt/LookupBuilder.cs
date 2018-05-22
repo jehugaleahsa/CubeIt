@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace CubeIt
 {
@@ -10,21 +8,18 @@ namespace CubeIt
     /// <typeparam name="UValue">The type the cube holds.</typeparam>
     internal sealed class LookupBuilder<UValue>
     {
-        private readonly Dictionary<Dimension, Dictionary<KeyPart, List<Key>>> keyLookup;
-        private readonly Dictionary<Key, UValue> valueLookup;
-
         /// <summary>
         /// Initializes a new instance of a LookupBuilder.
         /// </summary>
         /// <param name="dimensions">The dimensions in the resulting cube.</param>
         public LookupBuilder(IEnumerable<Dimension> dimensions)
         {
-            keyLookup = new Dictionary<Dimension, Dictionary<KeyPart, List<Key>>>();
+            KeyLookup = new Dictionary<Dimension, Dictionary<KeyPart, List<Key>>>();
             foreach (Dimension dimension in dimensions)
             {
-                keyLookup.Add(dimension, new Dictionary<KeyPart, List<Key>>());
+                KeyLookup.Add(dimension, new Dictionary<KeyPart, List<Key>>());
             }
-            valueLookup = new Dictionary<Key, UValue>();
+            ValueLookup = new Dictionary<Key, UValue>();
         }
 
         /// <summary>
@@ -34,7 +29,7 @@ namespace CubeIt
         /// <param name="value">The value to add to the cube.</param>
         public void Add(Key key, UValue value)
         {
-            valueLookup.Add(key, value);
+            ValueLookup.Add(key, value);
             addKeyLookup(key);
         }
 
@@ -42,7 +37,7 @@ namespace CubeIt
         {
             foreach (KeyPart keyPart in key.GetKeyParts())
             {
-                Dictionary<KeyPart, List<Key>> dimensionLookup = keyLookup[keyPart.Dimension];
+                Dictionary<KeyPart, List<Key>> dimensionLookup = KeyLookup[keyPart.Dimension];
                 List<Key> keys;
                 if (!dimensionLookup.TryGetValue(keyPart, out keys))
                 {
@@ -56,18 +51,12 @@ namespace CubeIt
         /// <summary>
         /// Gets a key to value lookup.
         /// </summary>
-        public Dictionary<Key, UValue> ValueLookup
-        {
-            get { return valueLookup; }
-        }
+        public Dictionary<Key, UValue> ValueLookup { get; private set; }
 
         /// <summary>
         /// Gets a look, for each dimension, from key parts to their keys.
         /// </summary>
-        public Dictionary<Dimension, Dictionary<KeyPart, List<Key>>> KeyLookup
-        {
-            get { return keyLookup; }
-        }
+        public Dictionary<Dimension, Dictionary<KeyPart, List<Key>>> KeyLookup { get; private set; }
 
         /// <summary>
         /// Determines whether a value has been associated with a key.
@@ -76,7 +65,7 @@ namespace CubeIt
         /// <returns>True if the key has already been associated with a value; otherwise, false.</returns>
         public bool ContainsKey(Key key)
         {
-            return valueLookup.ContainsKey(key);
+            return ValueLookup.ContainsKey(key);
         }
     }
 }

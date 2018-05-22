@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CubeIt
 {
@@ -20,11 +19,7 @@ namespace CubeIt
         /// <summary>
         /// Gets the key into the new table where the collision is occurring.
         /// </summary>
-        public Key Key
-        {
-            get;
-            private set;
-        }
+        public Key Key { get; private set; }
 
         /// <summary>
         /// Gets the key part/value pairs being collapsed into the new key.
@@ -37,38 +32,6 @@ namespace CubeIt
         internal void AddPair(object keyPartValue, TValue value)
         {
             pairs.Add(new GroupPair<TValue>(keyPartValue, value));
-        }
-    }
-
-    /// <summary>
-    /// Holds the key part and value from the old table that is being collapsed.
-    /// </summary>
-    /// <typeparam name="TValue">The type of the value.</typeparam>
-    public sealed class GroupPair<TValue>
-    {
-        private readonly object keyPartValue;
-        private readonly TValue value;
-
-        internal GroupPair(object keyPartValue, TValue value)
-        {
-            this.keyPartValue = keyPartValue;
-            this.value = value;
-        }
-
-        /// <summary>
-        /// Gets the key part value from the source table.
-        /// </summary>
-        public object KeyPartValue 
-        {
-            get { return keyPartValue; }
-        }
-
-        /// <summary>
-        /// Gets the value associated with the key part.
-        /// </summary>
-        public TValue Value 
-        {
-            get { return value; }
         }
     }
 }

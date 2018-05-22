@@ -10,15 +10,8 @@ namespace CubeIt
     /// <typeparam name="TValue">The type of the values in the cube.</typeparam>
     public sealed class Cube<TValue>
     {
-        private static readonly Cube<TValue> nullCube = createNullCube();
         private readonly Dictionary<Dimension, Dictionary<KeyPart, List<Key>>> keyLookup;
         private readonly Dictionary<Key, TValue> valueLookup;
-
-        private static Cube<TValue> createNullCube()
-        {
-            Dimension[] dimensions = new Dimension[0];
-            return new Cube<TValue>(new LookupBuilder<TValue>(dimensions));
-        }
 
         /// <summary>
         /// Initializes a new instance of a Cube.
@@ -33,9 +26,12 @@ namespace CubeIt
         /// <summary>
         /// Gets a cube with no dimensions or values.
         /// </summary>
-        public static Cube<TValue> NullCube
+        public static Cube<TValue> NullCube { get; private set; } = createNullCube();
+
+        private static Cube<TValue> createNullCube()
         {
-            get { return nullCube; }
+            Dimension[] dimensions = new Dimension[0];
+            return new Cube<TValue>(new LookupBuilder<TValue>(dimensions));
         }
 
         /// <summary>
@@ -61,7 +57,7 @@ namespace CubeIt
             }
             if (!dimensions.Any())
             {
-                return nullCube;
+                return NullCube;
             }
             if (dimensions.Any(dimension => dimension == null))
             {
@@ -95,7 +91,7 @@ namespace CubeIt
             }
             if (key.DimensionCount == 0)
             {
-                return nullCube;
+                return NullCube;
             }
             IEnumerable<Dimension> dimensions = key.GetKeyParts().Select(part => part.Dimension);
             LookupBuilder<TValue> builder = new LookupBuilder<TValue>(dimensions);
